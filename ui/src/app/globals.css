@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.component-item {
+  @apply p-2 rounded-md;
+}
+
+.component-item.active {
+  @apply bg-indigo-50;
+}
+
+.component-item-container {
+  @apply border rounded-md hover:border-indigo-400 cursor-pointer bg-white;
+}
+
+.component-item.active .component-item-container {
+  @apply border-indigo-500;
+}
