@@ -5,28 +5,29 @@ import {
     Draggable,
     DropResult,
     Droppable,
-    OnDragEndResponder,
 } from 'react-beautiful-dnd';
-import { useMainContext } from './MainContext';
 import ContentItem from './ContentItem';
+import { AppDispatch, useAppSelector } from '@/store';
+import { useDispatch } from 'react-redux';
+import { genUiAction } from '@/store/genUiSlice';
+import genUiApi from '@/services/genUiApi';
 
 export default function Content() {
-    const { layouts, removeLayout, swapLayout } = useMainContext();
+    const layoutsArr = useAppSelector((state) => state.genui.layouts);
+    const layoutSelected = layoutsArr.find((el) => el.selected);
+    const dispatch = useDispatch<AppDispatch>();
 
     const onDelete = (index: number) => {
-        removeLayout(index);
+        dispatch(genUiAction.removeLayout(index));
     };
 
     const onGenerate = async () => {
-        const response = await fetch('http://localhost:3232/generate', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                layouts,
-            }),
+        if (!layoutSelected) return;
+        const { data } = await genUiApi.generateUi({
+            layouts: layoutSelected.layouts,
+            page: layoutSelected.page,
         });
+        console.log(data);
     };
 
     const onDragEnd = (result: DropResult) => {
@@ -35,7 +36,20 @@ export default function Content() {
         const sourceIndex = result.source.index;
         if (destIndex === undefined) return;
 
-        swapLayout(sourceIndex, destIndex);
+        dispatch(
+            genUiAction.swapLayout({
+                source: sourceIndex,
+                dest: destIndex,
+            })
+        );
+    };
+
+    const onOpenPrevew = () => {
+        dispatch(genUiAction.changeMode('preview'));
+    };
+
+    const onClosePreivew = () => {
+        dispatch(genUiAction.changeMode('edit'));
     };
 
     return (
@@ -49,38 +63,42 @@ export default function Content() {
                                 ref={provided.innerRef}
                                 className="content w-[600px] mx-auto py-12 space-y-2"
                             >
-                                {layouts.map((layout, index) => {
-                                    console.log(index);
-                                    return (
-                                        <Draggable
-                                            key={layout}
-                                            draggableId={layout + index}
-                                            index={index}
-                                        >
-                                            {(provided, snapshot) => (
-                                                <div
-                                                    ref={provided.innerRef}
-                                                    {...provided.draggableProps}
-                                                    {...provided.dragHandleProps}
-                                                    className="flex items-center gap-2 group"
-                                                >
-                                                    {/* <div className="px-6 py-3 border bg-white w-full">{layout}</div> */}
-                                                    <ContentItem
-                                                        name={layout}
-                                                    />
-                                                    <span className="grow-0 w-[30px] text-gray-500 cursor-pointer">
-                                                        <XMarkIcon
-                                                            className="p-1 group-hover:block hidden"
-                                                            onClick={() =>
-                                                                onDelete(index)
-                                                            }
+                                {layoutSelected?.layouts.map(
+                                    (layout, index) => {
+                                        console.log(index);
+                                        return (
+                                            <Draggable
+                                                key={layout}
+                                                draggableId={layout + index}
+                                                index={index}
+                                            >
+                                                {(provided, snapshot) => (
+                                                    <div
+                                                        ref={provided.innerRef}
+                                                        {...provided.draggableProps}
+                                                        {...provided.dragHandleProps}
+                                                        className="flex items-center gap-2 group"
+                                                    >
+                                                        {/* <div className="px-6 py-3 border bg-white w-full">{layout}</div> */}
+                                                        <ContentItem
+                                                            name={layout}
                                                         />
-                                                    </span>
-                                                </div>
-                                            )}
-                                        </Draggable>
-                                    );
-                                })}
+                                                        <span className="grow-0 w-[30px] text-gray-500 cursor-pointer">
+                                                            <XMarkIcon
+                                                                className="p-1 group-hover:block hidden"
+                                                                onClick={() =>
+                                                                    onDelete(
+                                                                        index
+                                                                    )
+                                                                }
+                                                            />
+                                                        </span>
+                                                    </div>
+                                                )}
+                                            </Draggable>
+                                        );
+                                    }
+                                )}
                                 {provided.placeholder}
                             </section>
                         );
@@ -95,7 +113,7 @@ export default function Content() {
                     Generate
                 </button>
                 <button
-                    onClick={onGenerate}
+                    onClick={onOpenPrevew}
                     className="px-6 py-2 w-32 border rounded-md bg-indigo-500 text-white"
                 >
                     Preview

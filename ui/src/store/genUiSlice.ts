@@ -1,12 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface GenUiState {
-    layouts: { path: string; layouts: string[]; selected: boolean }[];
+    layouts: { page: string; layouts: string[]; selected: boolean }[];
     mode: 'edit' | 'preview';
 }
 
 const initialState: GenUiState = {
-    layouts: [{ path: '/', layouts: ['hello', 'haha'], selected: true }],
+    layouts: [{ page: '/', layouts: [], selected: true }],
     mode: 'edit',
 };
 
@@ -19,6 +19,8 @@ const genUiSlice = createSlice({
                 el.layouts.push(action.payload);
                 return el;
             });
+
+            localStorage.setItem('layouts', JSON.stringify(state));
         },
         removeLayout(state, action: PayloadAction<number>) {
             state.layouts = state.layouts.map((el) => {
@@ -30,6 +32,8 @@ const genUiSlice = createSlice({
                     ),
                 };
             });
+
+            localStorage.setItem('layouts', JSON.stringify(state));
         },
         swapLayout(
             state,
@@ -45,19 +49,55 @@ const genUiSlice = createSlice({
                 return { ...el, layouts: clonedLayout };
             });
         },
-        newPath(state, action: PayloadAction<string>) {
-            if (state.layouts.some((el) => el.path === action.payload)) return;
-            state.layouts.map((el) => ({ ...el, selected: false }));
+        newPage(state, action: PayloadAction<string>) {
+            if (state.layouts.some((el) => el.page === action.payload)) return;
+            state.layouts = state.layouts.map((el) => ({
+                ...el,
+                selected: false,
+            }));
             state.layouts.push({
-                path: action.payload,
+                page: action.payload,
                 selected: true,
                 layouts: [],
             });
+
+            localStorage.setItem('layouts', JSON.stringify(state));
         },
-        removePath(state, action: PayloadAction<number>) {
-            state.layouts = state.layouts.filter(
-                (el, index) => index !== action.payload
+        removePage(state, action: PayloadAction<number>) {
+            const nextSelectIndex =
+                state.layouts.length - 1 === action.payload
+                    ? action.payload - 1
+                    : action.payload;
+            state.layouts = state.layouts.reduce(
+                (
+                    acc: {
+                        page: string;
+                        layouts: string[];
+                        selected: boolean;
+                    }[],
+                    cur,
+                    index
+                ) => {
+                    if (index === action.payload) return acc;
+                    acc.push({
+                        ...cur,
+                        selected: index === nextSelectIndex,
+                    });
+                    return acc;
+                },
+                []
             );
+
+            localStorage.setItem('layouts', JSON.stringify(state));
+        },
+        changePage(state, action: PayloadAction<number>) {
+            state.layouts = state.layouts.map((el, index) => ({
+                ...el,
+                selected: index === action.payload,
+            }));
+        },
+        changeMode(state, action: PayloadAction<'edit' | 'preview'>) {
+            state.mode = action.payload;
         },
     },
     name: 'genui',
