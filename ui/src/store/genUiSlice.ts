@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface GenUiState {
+export interface GenUiState {
     layouts: { page: string; layouts: string[]; selected: boolean }[];
     mode: 'edit' | 'preview';
 }
@@ -48,6 +48,8 @@ const genUiSlice = createSlice({
                 clonedLayout[dest] = temp;
                 return { ...el, layouts: clonedLayout };
             });
+
+            localStorage.setItem('layouts', JSON.stringify(state));
         },
         newPage(state, action: PayloadAction<string>) {
             if (state.layouts.some((el) => el.page === action.payload)) return;
@@ -98,6 +100,10 @@ const genUiSlice = createSlice({
         },
         changeMode(state, action: PayloadAction<'edit' | 'preview'>) {
             state.mode = action.payload;
+        },
+        setInitState(state, action: PayloadAction<GenUiState>) {
+            state = action.payload;
+            return state;
         },
     },
     name: 'genui',
