@@ -35,7 +35,6 @@ export default function Home() {
             const oldSelectedLayouts: GenUiState = JSON.parse(
                 oldSelectedLayoutsJson
             );
-            console.log(oldSelectedLayouts);
             dispactch(genUiAction.setInitState(oldSelectedLayouts));
         }
     }, []);

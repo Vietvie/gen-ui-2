@@ -2,7 +2,7 @@
 import { AppDispatch, useAppSelector } from '@/store';
 import { genUiAction } from '@/store/genUiSlice';
 import { XMarkIcon } from '@heroicons/react/24/outline';
-import React, { FormEvent, useState } from 'react';
+import React, { FormEvent, KeyboardEvent, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 const PageBar = () => {
@@ -15,20 +15,26 @@ const PageBar = () => {
         dispatch(genUiAction.changePage(index));
     };
 
-    const handleAddNewPage = (e: FormEvent<HTMLInputElement>) => {
-        if (!newPage) {
-            return setOpenAddPage(false);
-        }
-        dispatch(genUiAction.newPage('/' + newPage.trim()));
+    const handleAddNewPage = () => {
+        const newPagePath = newPage === '/' ? newPage : '/' + newPage;
+        dispatch(genUiAction.newPage(newPagePath));
         setOpenAddPage(false);
         setNewPage('');
+    };
+
+    const onBlurAddPage = (e: FormEvent<HTMLInputElement>) => {
+        if (!newPage) return setOpenAddPage(false);
+        handleAddNewPage();
+    };
+
+    const onEnterAddPage = (e: KeyboardEvent<HTMLInputElement>) => {
+        if (e.key !== 'Enter') return;
+        handleAddNewPage();
     };
 
     const handleRemovePage = (index: number) => {
         dispatch(genUiAction.removePage(index));
     };
-
-    console.log(pageList);
 
     return (
         <div className="flex shadow-sm border-b h-14 items-center">
@@ -56,7 +62,7 @@ const PageBar = () => {
             {!openAddPage && (
                 <button
                     onClick={() => setOpenAddPage(true)}
-                    className="h-full aspect-square"
+                    className="h-full aspect-square hover:bg-slate-200"
                 >
                     +
                 </button>
@@ -66,10 +72,11 @@ const PageBar = () => {
                     autoFocus
                     value={newPage}
                     onChange={(e) => setNewPage(e.currentTarget.value.trim())}
-                    onBlur={handleAddNewPage}
+                    onBlur={onBlurAddPage}
+                    onKeyUp={onEnterAddPage}
                     type="text"
                     placeholder="new page"
-                    className="h-full p-2"
+                    className="h-full p-2 w-32"
                 />
             )}
         </div>

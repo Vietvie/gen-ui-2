@@ -5,7 +5,7 @@ import {
     Draggable,
     DropResult,
     Droppable,
-} from 'react-beautiful-dnd';
+} from '@hello-pangea/dnd';
 import ContentItem from './ContentItem';
 import { AppDispatch, useAppSelector } from '@/store';
 import { useDispatch } from 'react-redux';
@@ -27,7 +27,6 @@ export default function Content() {
             layouts: layoutSelected.layouts,
             page: layoutSelected.page,
         });
-        console.log(data);
     };
 
     const onDragEnd = (result: DropResult) => {
@@ -65,10 +64,9 @@ export default function Content() {
                             >
                                 {layoutSelected?.layouts.map(
                                     (layout, index) => {
-                                        console.log(index);
                                         return (
                                             <Draggable
-                                                key={layout}
+                                                key={layout + index}
                                                 draggableId={layout + index}
                                                 index={index}
                                             >
