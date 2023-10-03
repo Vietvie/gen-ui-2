@@ -97,6 +97,7 @@ const genUiSlice = createSlice({
                 ...el,
                 selected: index === action.payload,
             }));
+            localStorage.setItem('layouts', JSON.stringify(state));
         },
         changeMode(state, action: PayloadAction<'edit' | 'preview'>) {
             state.mode = action.payload;
