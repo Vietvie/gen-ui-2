@@ -1,4 +1,5 @@
 'use client';
+import genUiApi from '@/services/genUiApi';
 import { AppDispatch, useAppSelector } from '@/store';
 import { genUiAction } from '@/store/genUiSlice';
 import { XMarkIcon } from '@heroicons/react/24/outline';
@@ -15,7 +16,7 @@ const PageBar = () => {
         dispatch(genUiAction.changePage(index));
     };
 
-    const handleAddNewPage = () => {
+    const handleAddNewPage = async () => {
         const newPagePath = newPage === '/' ? newPage : '/' + newPage;
         dispatch(genUiAction.newPage(newPagePath));
         setOpenAddPage(false);
@@ -32,8 +33,15 @@ const PageBar = () => {
         handleAddNewPage();
     };
 
-    const handleRemovePage = (index: number) => {
-        dispatch(genUiAction.removePage(index));
+    const handleRemovePage = async (index: number) => {
+        try {
+            await genUiApi.deleteLayout({
+                page: pageList[index].page,
+            });
+            dispatch(genUiAction.removePage(index));
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     return (

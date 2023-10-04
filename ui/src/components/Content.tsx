@@ -11,22 +11,29 @@ import { AppDispatch, useAppSelector } from '@/store';
 import { useDispatch } from 'react-redux';
 import { genUiAction } from '@/store/genUiSlice';
 import genUiApi from '@/services/genUiApi';
+import { useState } from 'react';
 
 export default function Content() {
     const layoutsArr = useAppSelector((state) => state.genui.layouts);
     const layoutSelected = layoutsArr.find((el) => el.selected);
     const dispatch = useDispatch<AppDispatch>();
-
+    const [isGenerating, setIsGenerating] = useState<boolean>(false);
     const onDelete = (index: number) => {
         dispatch(genUiAction.removeLayout(index));
     };
 
     const onGenerate = async () => {
         if (!layoutSelected) return;
-        const { data } = await genUiApi.generateUi({
-            layouts: layoutSelected.layouts,
-            page: layoutSelected.page,
-        });
+        setIsGenerating(true);
+        try {
+            const { data } = await genUiApi.generateUi({
+                layouts: layoutSelected.layouts,
+                page: layoutSelected.page,
+            });
+        } catch (error) {
+            console.log(error);
+        }
+        setIsGenerating(false);
     };
 
     const onDragEnd = (result: DropResult) => {
@@ -105,10 +112,11 @@ export default function Content() {
             </DragDropContext>
             <div className="fixed bottom-4 right-4 flex gap-1">
                 <button
+                    disabled={isGenerating}
                     onClick={onGenerate}
-                    className="px-6 py-2 w-32 border rounded-md bg-indigo-500 text-white"
+                    className="px-6 py-2 w-32 border rounded-md bg-indigo-500 text-white disabled:opacity-60"
                 >
-                    Generate
+                    {isGenerating ? 'Generating...' : 'Generate'}
                 </button>
                 <button
                     onClick={onOpenPrevew}

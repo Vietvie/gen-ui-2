@@ -18,6 +18,10 @@ const genUiApi = {
             tailwindLayouts: string[];
         }>(baseURL);
     },
+    deleteLayout(data: { page: string }) {
+        const baseURL = '/delete';
+        return genUiAxiosClient.post<{ status: string }>(baseURL, data);
+    },
 };
 
 export default genUiApi;

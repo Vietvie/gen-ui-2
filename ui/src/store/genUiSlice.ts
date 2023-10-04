@@ -69,7 +69,7 @@ const genUiSlice = createSlice({
             const nextSelectIndex =
                 state.layouts.length - 1 === action.payload
                     ? action.payload - 1
-                    : action.payload;
+                    : action.payload + 1;
             state.layouts = state.layouts.reduce(
                 (
                     acc: {

@@ -4,8 +4,9 @@ import PageBar from '@/components/PageBar';
 import Preview from '@/components/Preview';
 import Sidebar from '@/components/Sidebar';
 import genUiApi from '@/services/genUiApi';
-import { AppDispatch } from '@/store';
+import { AppDispatch, useAppSelector } from '@/store';
 import { GenUiState, genUiAction } from '@/store/genUiSlice';
+import { WalletIcon } from '@heroicons/react/24/outline';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
@@ -16,6 +17,7 @@ export interface ILayoutGroup {
 export default function Home() {
     const [layouts, setLayouts] = useState<ILayoutGroup | undefined>();
     const dispactch = useDispatch<AppDispatch>();
+    const { mode } = useAppSelector((state) => state.genui);
     useEffect(() => {
         async function fetchLayouts() {
             const { data } = await genUiApi.getLayouts();
@@ -47,7 +49,13 @@ export default function Home() {
                         <PageBar />
                         <div className="flex">
                             <Content />
-                            <Preview />
+                            <div
+                                className={`w-[700px] shrink-0 border-l flex justify-center items-center text-gray-400 text-4xl font-semibold`}
+                            >
+                                <WalletIcon className="w-20" />
+                                <p>Comming Soon</p>
+                            </div>
+                            {mode === 'preview' && <Preview />}
                         </div>
                     </div>
                 </>
