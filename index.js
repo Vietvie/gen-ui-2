@@ -46,14 +46,13 @@ app.get(
 app.post(
     '/generate',
     catchAsync(async (req, res, next) => {
-        const body = req.body; //input {layouts: string[] page: '/page-path'}
-        console.log(req.body);
+        //input {layouts: string[] page: '/page-path'}
         const pagePath = req.body.page;
         if (!pagePath)
             return res.status(400).json({
-                msg: 'page fields  is required!',
+                msg: 'page field  is required!',
             });
-        const layouts = body.layouts;
+        const layouts = req.body.layouts;
         const pageComponentFolder = `${previewAppFolderPath}/_components${
             pagePath === '/' ? '/_' : pagePath
         }`;
@@ -84,8 +83,8 @@ app.post(
         console.log(components);
         console.log(importLinks);
 
-        const nextJsPagePath = previewAppFolderPath + `${pagePath}/page.js`;
-        await fs.copy(pageTemplatePath, nextJsPagePath);
+        const newPreviewPagePath = previewAppFolderPath + `${pagePath}/page.js`;
+        await fs.copy(pageTemplatePath, newPreviewPagePath);
 
         await replace({
             files: `./demos/nextjs13/src/app${pagePath}/page.js`,

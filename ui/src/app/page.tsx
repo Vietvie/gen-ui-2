@@ -53,7 +53,7 @@ export default function Home() {
                                 className={`w-[700px] shrink-0 border-l flex justify-center items-center text-gray-400 text-4xl font-semibold`}
                             >
                                 <WalletIcon className="w-20" />
-                                <p>Comming Soon</p>
+                                <p>Coming Soon</p>
                             </div>
                             {mode === 'preview' && <Preview />}
                         </div>

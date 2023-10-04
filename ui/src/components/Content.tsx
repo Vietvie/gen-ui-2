@@ -54,10 +54,6 @@ export default function Content() {
         dispatch(genUiAction.changeMode('preview'));
     };
 
-    const onClosePreivew = () => {
-        dispatch(genUiAction.changeMode('edit'));
-    };
-
     return (
         <div className="relative bg-gray-100 w-full h-screen overflow-y-auto">
             <DragDropContext onDragEnd={onDragEnd}>
@@ -84,7 +80,6 @@ export default function Content() {
                                                         {...provided.dragHandleProps}
                                                         className="flex items-center gap-2 group"
                                                     >
-                                                        {/* <div className="px-6 py-3 border bg-white w-full">{layout}</div> */}
                                                         <ContentItem
                                                             name={layout}
                                                         />
@@ -120,7 +115,7 @@ export default function Content() {
                 </button>
                 <button
                     onClick={onOpenPrevew}
-                    className="px-6 py-2 w-32 border rounded-md bg-indigo-500 text-white"
+                    className="px-6 py-2 w-32 border rounded-md bg-slate-900 text-white"
                 >
                     Preview
                 </button>

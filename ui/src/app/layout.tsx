@@ -17,11 +17,11 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en">
-            <head>
+            {/* <head>
                 <meta httpEquiv="Cache-Control" content="no-cache" />
                 <meta httpEquiv="Pragma" content="no-cache" />
                 <meta httpEquiv="Expires" content="0" />
-            </head>
+            </head> */}
             <body className={inter.className}>
                 <ReduxProvider>{children}</ReduxProvider>
             </body>

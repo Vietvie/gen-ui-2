@@ -13,7 +13,7 @@ import { useDispatch } from 'react-redux';
 
 export default function Preview() {
     const [isMobile, setIsMobile] = useState<boolean>(false);
-    const { mode, layouts } = useAppSelector((state) => state.genui);
+    const { layouts } = useAppSelector((state) => state.genui);
     const layoutSelected = layouts.find((el) => el.selected);
     const previewPageUrl = `http://localhost:3011${layoutSelected?.page}`;
     const dispatch = useDispatch<AppDispatch>();
