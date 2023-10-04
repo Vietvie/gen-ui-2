@@ -54,12 +54,9 @@ app.post(
                 msg: 'page fields  is required!',
             });
         const layouts = body.layouts;
-        const destParentFolder = path.join(
-            __dirname,
-            `./demos/nextjs13/src/app/_components${
-                pagePath === '/' ? '/_' : pagePath
-            }`
-        );
+        const pageComponentFolder = `${previewAppFolderPath}/_components${
+            pagePath === '/' ? '/_' : pagePath
+        }`;
 
         const importLinks = [];
         const components = [];
@@ -68,7 +65,7 @@ app.post(
         layouts.forEach((section) => {
             const sourceFilePath = path.join(resourcePath, `${section}.js`);
             const destinationPath = path.join(
-                destParentFolder,
+                pageComponentFolder,
                 `${section}.js`
             );
 

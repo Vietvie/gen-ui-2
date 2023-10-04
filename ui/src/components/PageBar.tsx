@@ -17,7 +17,8 @@ const PageBar = () => {
     };
 
     const handleAddNewPage = async () => {
-        const newPagePath = newPage === '/' ? newPage : '/' + newPage;
+        const newPagePath =
+            newPage === '/' ? newPage : '/' + newPage.replaceAll('/', '');
         dispatch(genUiAction.newPage(newPagePath));
         setOpenAddPage(false);
         setNewPage('');
