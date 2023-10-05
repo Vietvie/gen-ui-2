@@ -1,5 +1,6 @@
 'use client';
 import Content from '@/components/Content';
+import EditSection from '@/components/EditSection';
 import PageBar from '@/components/PageBar';
 import Preview from '@/components/Preview';
 import Sidebar from '@/components/Sidebar';
@@ -49,12 +50,7 @@ export default function Home() {
                         <PageBar />
                         <div className="flex">
                             <Content />
-                            <div
-                                className={`w-[700px] shrink-0 border-l flex justify-center items-center text-gray-400 text-4xl font-semibold`}
-                            >
-                                <WalletIcon className="w-20" />
-                                <p>Coming Soon</p>
-                            </div>
+                            <EditSection />
                             {mode === 'preview' && <Preview />}
                         </div>
                     </div>

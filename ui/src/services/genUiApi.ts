@@ -22,6 +22,10 @@ const genUiApi = {
         const baseURL = '/delete';
         return genUiAxiosClient.post<{ status: string }>(baseURL, data);
     },
+    readLayout(data: { page: string; section: string }) {
+        const baseURL = '/readlayout';
+        return genUiAxiosClient.post<any>(baseURL, data);
+    },
 };
 
 export default genUiApi;

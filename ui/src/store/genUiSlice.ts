@@ -3,11 +3,17 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 export interface GenUiState {
     layouts: { page: string; layouts: string[]; selected: boolean }[];
     mode: 'edit' | 'preview';
+    sectionEditing?: {
+        page: string;
+        index: number;
+        section: string;
+    };
 }
 
 const initialState: GenUiState = {
     layouts: [{ page: '/', layouts: [], selected: true }],
     mode: 'edit',
+    sectionEditing: undefined,
 };
 
 const genUiSlice = createSlice({
@@ -105,6 +111,17 @@ const genUiSlice = createSlice({
         setInitState(state, action: PayloadAction<GenUiState>) {
             state = action.payload;
             return state;
+        },
+        setSectionEdit(
+            state,
+            action: PayloadAction<{
+                page: string;
+                index: number;
+                section: string;
+            }>
+        ) {
+            state.sectionEditing = action.payload;
+            localStorage.setItem('layouts', JSON.stringify(state));
         },
     },
     name: 'genui',

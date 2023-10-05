@@ -22,6 +22,10 @@ export default function Content() {
         dispatch(genUiAction.removeLayout(index));
     };
 
+    const sectionEditing = useAppSelector(
+        (state) => state.genui.sectionEditing
+    );
+
     const onGenerate = async () => {
         if (!layoutSelected) return;
         setIsGenerating(true);
@@ -54,6 +58,16 @@ export default function Content() {
         dispatch(genUiAction.changeMode('preview'));
     };
 
+    const onSelectSection = (page: string, section: string, index: number) => {
+        dispatch(
+            genUiAction.setSectionEdit({
+                page,
+                section,
+                index,
+            })
+        );
+    };
+
     return (
         <div className="relative bg-gray-100 w-full h-screen overflow-y-auto">
             <DragDropContext onDragEnd={onDragEnd}>
@@ -81,7 +95,15 @@ export default function Content() {
                                                         className="flex items-center gap-2 group"
                                                     >
                                                         <ContentItem
-                                                            name={layout}
+                                                            onSelectSection={() =>
+                                                                onSelectSection(
+                                                                    layoutSelected.page,
+                                                                    layout,
+                                                                    index
+                                                                )
+                                                            }
+                                                            section={layout}
+                                                            index={index}
                                                         />
                                                         <span className="grow-0 w-[30px] text-gray-500 cursor-pointer">
                                                             <XMarkIcon

@@ -1,5 +1,5 @@
+'use client'
 import Image from "next/image";
-
 {/*R_IMPORT_START*/}
 
           {/*R_IMPORT_END*/}
